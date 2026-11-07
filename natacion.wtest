@@ -1,4 +1,5 @@
 import natacion.*
+import estilos.*
 
 // Aclaraciones!
 //
@@ -28,6 +29,11 @@ describe "natacion" {
   //const isa = un docente básico que sí es guardavida
   //const nico = un docente dedicado al estilo pecho que no es guardavida
   //const mara = una docente externa que no es guardavida y acepta hasta 2 estudiantes menores de 13 años por curso
+  const debi = new Basico(esGuardaVida = false)
+  const isa = new Basico(esGuardaVida = true)
+  const nico = new Dedicado(estilo = pecho, esGuardaVida = false)
+  const mara = new Externo(limiteMenores = 2, esGuardaVida = false)
+
 
   //const milena = Una estudiante de edad 10 que domina los estilos croll y pecho
   //const rodrigo = Un estudiante de edad 9 domina los estilos mariposa y pecho
@@ -35,17 +41,37 @@ describe "natacion" {
   //const elias = Un estudiante de edad 15 que no domina ningún estilo
   //const camilo = Un estudiante de edad 16 que domina los estilos croll, pecho y espalda
   //const juana = Una estudiante de edad 16 que domina el estilo croll
+  const milena = new Estudiante(estilos = #{croll, pecho}, edad = 10)
+  const rodrigo = new Estudiante(estilos = #{mariposa, pecho}, edad = 9)
+  const matilda = new Estudiante(estilos = #{croll, pecho}, edad = 9)
+  const elias = new Estudiante(estilos = #{}, edad = 15)
+  const camilo = new Estudiante(estilos = #{croll, pecho, espalda}, edad = 16)
+  const juana = new Estudiante(estilos = #{croll}, edad = 16)
 
   // const martes = Un curso base que tiene a debi como docente, el cupo máximo es 3 y tiene como inscriptos a milena y rodrigo
   // const jueves = Un curso base que tiene a isa como docente, el cupo máximo es 3 y tiene inscriptos a milena y rodrigo
   // const viernes = Un curso base que tiene a nico como docente, el cupo máximo es 3 y tiene inscripto a milena y rodrigo
   // const colonia = Un curso escuela de niños que tiene a debi como docente, el cupo máximo es 3 y tiene inscriptos a milena y rodrigo
   // const rehabilitacion = un curso terapéutico que tiene a mara como docente, el cupo máximo es 4, y tiene inscriptos a milena y camilo. Para el punto 2, la recaudacion bruta es de 300
+  const martes = new Base(docente = debi, cupoMaximo = 3, estudiantesInscriptos = #{milena, rodrigo})
+  const jueves = new Base(docente = isa, cupoMaximo = 3, estudiantesInscriptos = #{milena, rodrigo})
+  const viernes = new Base(docente = nico, cupoMaximo = 3, estudiantesInscriptos = #{milena, rodrigo})
+  const colonia = new EscuelitaDeNiños(docente = debi, cupoMaximo = 3, estudiantesInscriptos = #{milena, rodrigo})
+  const rehabilitacion = new Terapeuticos(docente = mara, cupoMaximo = 4, estudiantesInscriptos = #{milena, camilo})
 
   //const toninas = Es una escuela que tiene 1000 de dinero guardado y dicta los cursos martes, jueves, viernes, colonia y rehabilitacion
 
   test "1. a. curso basico (no guardavida)" {
-      assert.that(true)    
+      assert.notThat(martes.puedeInscribirAEstudiante(milena))
+      assert.that(martes.puedeInscribirAEstudiante(matilda))
+      assert.that(martes.puedeInscribirAEstudiante(camilo))
+      assert.notThat(martes.puedeInscribirAEstudiante(elias))
+
+      assert.throwsException({martes.inscribirAEstudiante(elias)})
+      martes.inscribirAEstudiante(matilda)
+      assert.equals(#{milena,rodrigo,matilda}, martes.estudiantesInscriptos())
+      assert.throwsException({martes.inscribirAEstudiante(camilo)})
+
   //     //- milena no puede inscribirse al curso de los martes (porque ya está inscripta)
   //     //- En cambio, matilda sí se puede inscribir a los cursos de los martes
   //     //- camilo también se puede inscribir al curso de los martes
@@ -57,10 +83,13 @@ describe "natacion" {
   //     //-Como ahora se completó el curso, camilo ya no puede ser inscripto. 
   }
 
-  // test "1. b. curso basico (guardavida)" {
-  //     // - En el curso de los jueves sí se puede inscribir elias (no sabe ningún estilo pero isa es guardavida)
-  //     // - Luego de incribir a elías en el curso de los jueves, los inscriptos de dicho curso son milena, rodrigo y elias 
-  // }
+   test "1. b. curso basico (guardavida)" {
+      assert.that(jueves.puedeInscribirAEstudiante(elias))
+      jueves.inscribirAEstudiante(elias)
+      assert.equals(#{milena,rodrigo,elias}, jueves.estudiantesInscriptos())
+       // - En el curso de los jueves sí se puede inscribir elias (no sabe ningún estilo pero isa es guardavida)
+       // - Luego de incribir a elías en el curso de los jueves, los inscriptos de dicho curso son milena, rodrigo y elias 
+   }
 
   // test "1.c. curso basico docente dedicado" {
   //     // - En el curso de los viernes no se pude inscribir a milena (ya está inscripta)
