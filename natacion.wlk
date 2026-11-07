@@ -38,6 +38,10 @@ class Curso {
     const cupoMaximo
     const estudiantesInscriptos //coleccion tipo set
 
+    method docente() {
+      return docente
+    }
+
     method estudiantesInscriptos() {
       return estudiantesInscriptos
     }
@@ -85,6 +89,14 @@ class Curso {
 
     method recaudacionDeCurso() {
       return estudiantesInscriptos.sum({estudiante => estudiante.descuentoPorSusEstilo()})
+    }
+
+    method esCursoConEstilo(estilo) {
+      return estudiantesInscriptos.any({estudiante => estudiante.dominaElEstilo(estilo)})
+    }
+
+    method esCursoInfantil() {
+      return estudiantesInscriptos.all({estudiante => estudiante.esMenorA13()})
     }
 }
 
@@ -174,6 +186,18 @@ class Escuela {
 
     method recaudacionMensual() {
       return cursos.sum({curso => curso.recaudacionBruta()})
+    }
+
+    method cursoConEstilo(estilo) {
+      return cursos.find({curso => curso.esCursoConEstilo(estilo)})
+    }
+
+    method cursosInfantiles() {
+      return cursos.filter({curso => curso.esCursoInfantil()})
+    }
+
+    method docentesDeCursosInfantiles() {
+      return self.cursosInfantiles().map({curso => curso.docente()})
     }
 
 }

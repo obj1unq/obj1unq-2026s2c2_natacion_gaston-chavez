@@ -205,12 +205,14 @@ describe "natacion" {
    }
 
 //punto 3
-  // test "3 consultas" {
-  //   // Buscar un curso con el estilo espalda en la escuela toninas: La única opción posible es rehabilitación
-  //   // Inscribir a camilo en el curso de los viernes
-  //   // Los cursos infantiles de la escuela toninas son martes, jueves y colonia
-  //   // Los docentes de los cursos infantiles de la escuela toninas son debi e isa    
-  // }
-
-
+   test "3 consultas" {
+    assert.equals(rehabilitacion, toninas.cursoConEstilo(espalda))
+    viernes.inscribirAEstudiante(camilo)
+    assert.equals(#{martes,jueves,colonia}, toninas.cursosInfantiles())
+    assert.equals([debi,isa,debi], toninas.docentesDeCursosInfantiles())
+     // Buscar un curso con el estilo espalda en la escuela toninas: La única opción posible es rehabilitación
+     // Inscribir a camilo en el curso de los viernes
+     // Los cursos infantiles de la escuela toninas son martes, jueves y colonia
+     // Los docentes de los cursos infantiles de la escuela toninas son debi e isa    
+   }
 }
