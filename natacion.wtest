@@ -57,9 +57,10 @@ describe "natacion" {
   const jueves = new Base(docente = isa, cupoMaximo = 3, estudiantesInscriptos = #{milena, rodrigo})
   const viernes = new Base(docente = nico, cupoMaximo = 3, estudiantesInscriptos = #{milena, rodrigo})
   const colonia = new EscuelitaDeNiños(docente = debi, cupoMaximo = 3, estudiantesInscriptos = #{milena, rodrigo})
-  const rehabilitacion = new Terapeuticos(docente = mara, cupoMaximo = 4, estudiantesInscriptos = #{milena, camilo})
+  const rehabilitacion = new Terapeuticos(docente = mara, cupoMaximo = 4, estudiantesInscriptos = #{milena, camilo}, recaudacionBruta = 300)
 
   //const toninas = Es una escuela que tiene 1000 de dinero guardado y dicta los cursos martes, jueves, viernes, colonia y rehabilitacion
+  const toninas = new Escuela(dineroGuardado = 1000, cursos = #{martes,jueves,viernes,colonia,rehabilitacion})
 
   test "1. a. curso basico (no guardavida)" {
       assert.notThat(martes.puedeInscribirAEstudiante(milena))
@@ -150,17 +151,18 @@ describe "natacion" {
 
   //punto 2
 
-  // test "2.1 recaudacion" {
-
-  //   // Asegurarse que la reacudación de los martes y la de los jueves es 7.9        
-  //   // Si las cuentas no te dan, estos son los parciales:
-  //   //  por milena = 20 - 2 - 2 = 16
-  //   //  por rodrigo = rodrigo =  20 - 2 -3 =  15
-  //   //  bruta = 16 + 15 = 31
-  //   //  debi/isa = 20 + 31 * 0.1 = 20 + 3.1 = 23.1 
-  //   //  total =  31 - 23.1 = 7.9 
+   test "2.1 recaudacion" {
+      assert.equals(7.9, martes.recaudacionBruta())
+      assert.equals(7.9, jueves.recaudacionBruta())
+     // Asegurarse que la reacudación de los martes y la de los jueves es 7.9        
+     // Si las cuentas no te dan, estos son los parciales:
+     //  por milena = 20 - 2 - 2 = 16
+     //  por rodrigo = rodrigo =  20 - 2 -3 =  15
+     //  bruta = 16 + 15 = 31
+     //  debi/isa = 20 + 31 * 0.1 = 20 + 3.1 = 23.1 
+     //  total =  31 - 23.1 = 7.9 
   
-
+      assert.equals(6.35, viernes.recaudacionBruta())
   //   // Asegurarse que la recaudación del curso de los viernes es 6.35
   //   // Si las cuentas no te dan, éstos son los parciales:
   //   //  por milena = 20 - 2 - 2 = 16
@@ -169,22 +171,27 @@ describe "natacion" {
   //   //  nico = 20 + 31 * 0.15 = 20 + 4.65 = 24.65
   //   //  total = 31 - 24.65 = 6.35
     
-    
+      assert.equals(457.9, colonia.recaudacionBruta())
   //   // Asegurarse que la recaudación del curso colonia 457.9
   //   // Si las cuentas no te dan, éstos son los parciales:
   //   //  por milena = 20 - 2 - 2 = 16
   //   //  por rodrigo = rodrigo =  20 - 2 -3 =  15
   //   //  bruta = 500 + 16 + 15 = 531
   //   //  debi = 20 + 531 * 0.1 = 20 + 53.1 = 73.1 
-  //   //  total = 531 - 73.1 = 447.9
-    
+  //   //  total = 531 - 73.1 = 457.9
+      assert.equals(244, rehabilitacion.recaudacionBruta())
   //   // Asegurarse que la recaudación de la rehabilitación es 244
   //   // Si las cuentas no te dan, éstoso son los parciales:
   //   //  bruta = 300
   //   //  mara = 20 + 300 * 0.1 + 3 * 2 = 20 + 30 + 6 = 56
   //   //  total = 300 - 56 = 244
     
+      assert.equals(724.05, toninas.recaudacionMensual())
+      toninas.cobrarRecaudacion()
+      assert.equals(1724.05, toninas.dineroGuardado())
 
+      toninas.cobrarRecaudacion()
+      assert.equals(2448.1, toninas.dineroGuardado())
   //   // Asegurarse que la recaudación de la escuela toninas es 724.05
   //   // Si las cuentas no te dan, acá están los valores:
   //   //   7.9 + 7.9 + 6.35 + 457.9 + 244 = 724.05
@@ -195,7 +202,7 @@ describe "natacion" {
   //   // - cobrar nuevamente la recaudación mensual de la escuela toninas
   //   // - el total de dinero guardado en la escuela es ahora 2448.1
     
-  // }
+   }
 
 //punto 3
   // test "3 consultas" {

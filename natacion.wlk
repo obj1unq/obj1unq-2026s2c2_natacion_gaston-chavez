@@ -27,6 +27,10 @@ class Estudiante{
     method esMenorA13() {
       return edad < 13
     }
+
+    method descuentoPorSusEstilo() {
+      return 20 - estilos.sum({estilo => estilo.descuento()})
+    }
 }
 
 class Curso {
@@ -69,6 +73,19 @@ class Curso {
     method cantidadEstudiantesMenoresA13() {
       return estudiantesInscriptos.count({estudiante => estudiante.esMenorA13()})
     }
+
+
+    method cantidadEstudiantesIncriptos() {
+      return estudiantesInscriptos.size()
+    }
+
+    method recaudacionBruta(){
+        return self.recaudacionDeCurso() - docente.honorariosDocente(self.recaudacionDeCurso(),self)
+    }
+
+    method recaudacionDeCurso() {
+      return estudiantesInscriptos.sum({estudiante => estudiante.descuentoPorSusEstilo()})
+    }
 }
 
 class Base inherits Curso {
@@ -81,11 +98,20 @@ class EscuelitaDeNiños inherits Base {
     override method puedeAceptarAEstudiante(estudiante) {
         return super(estudiante) && estudiante.edad() < 13
     }
+
+    override method recaudacionDeCurso(){
+        return super() + 500
+    }
 }
 
 class Terapeuticos inherits Curso {
+    const recaudacionBruta
     override method puedeAceptarAEstudiante(estudiante) {
         return estudiante.tieneAlmenosUnEstiloRelajante()
+    }
+
+    override method recaudacionDeCurso(){ //NO ES EL MEJOR NOMBRE
+        return recaudacionBruta
     }
 }
 
@@ -96,12 +122,24 @@ class Docente {
     method esGuardaVida() {
       return esGuardaVida
     }
+
+    method honorariosDocente(recaudacionDeCurso,curso) {
+      return 20 + recaudacionDeCurso * self.porcentajeRecaudacion(curso)
+    }
+
+    method porcentajeRecaudacion(curso) {
+      return 0.1
+    }
 }
 
 class Dedicado inherits Docente {
     const estilo
     override method puedeDictarClase(estudiante,curso) {
         return estudiante.dominaElEstilo(estilo)
+    }
+
+    override method porcentajeRecaudacion(curso) {
+        return 0.15
     }
 }
 
@@ -110,10 +148,32 @@ class Externo inherits Docente {
     override method puedeDictarClase(estudiante,curso) {
         return estudiante.edad() > 13 || curso.cantidadEstudiantesMenoresA13() < limiteMenores
     }
+
+    override method honorariosDocente(recaudacionDeCurso,curso) {
+      return super(recaudacionDeCurso,curso) + 3 *  curso.cantidadEstudiantesIncriptos()
+    }
 }
 
 class Basico inherits Docente {
     override method puedeDictarClase(estudiante,curso) {
         return true
     }
+}
+
+class Escuela {
+    var dineroGuardado
+    const cursos
+
+    method dineroGuardado() {
+      return dineroGuardado
+    }
+
+    method cobrarRecaudacion() {
+      dineroGuardado += self.recaudacionMensual()
+    }
+
+    method recaudacionMensual() {
+      return cursos.sum({curso => curso.recaudacionBruta()})
+    }
+
 }
