@@ -91,38 +91,62 @@ describe "natacion" {
        // - Luego de incribir a elías en el curso de los jueves, los inscriptos de dicho curso son milena, rodrigo y elias 
    }
 
-  // test "1.c. curso basico docente dedicado" {
-  //     // - En el curso de los viernes no se pude inscribir a milena (ya está inscripta)
-  //     // - Pero matilda sí puede ser inscripta en el curso de los viernes
-  //     // - Camilo también puede ser inscripto en el curso de los viernes
-  //     // - Quien no puede ser inscripta en el curso de los viernes es juana (porque no domina el estilo pecho)
-  //     // - Por lo tanto si se intenta inscribir a juana en el curso de los viernes estamos en un problema
-  //     // - Al inscribir a matilda en el curso de los viernes, los nuevos inscriptos de ese curso son milena, rodrigo y matilda
-  //     // - Ahora camilo ya no puede ser inscripto (se completo el cupo)
-  //     // - Si intentás  inscribir a camilo estamos en un problema, porque no se puede
-  // }
+   test "1.c. curso basico docente dedicado" {
+      assert.notThat(viernes.puedeInscribirAEstudiante(milena))
+      assert.that(viernes.puedeInscribirAEstudiante(matilda))
+      assert.that(viernes.puedeInscribirAEstudiante(camilo))
+      assert.notThat(viernes.puedeInscribirAEstudiante(juana))
+      assert.throwsException({viernes.inscribirAEstudiante(juana)})
+      viernes.inscribirAEstudiante(matilda)
+      assert.equals(#{milena,rodrigo,matilda}, viernes.estudiantesInscriptos())
+      assert.notThat(viernes.puedeInscribirAEstudiante(camilo))
+      assert.throwsException({viernes.inscribirAEstudiante(camilo)})
+       // - En el curso de los viernes no se pude inscribir a milena (ya está inscripta)
+       // - Pero matilda sí puede ser inscripta en el curso de los viernes
+       // - Camilo también puede ser inscripto en el curso de los viernes
+       // - Quien no puede ser inscripta en el curso de los viernes es juana (porque no domina el estilo pecho)
+       // - Por lo tanto si se intenta inscribir a juana en el curso de los viernes estamos en un problema
+       // - Al inscribir a matilda en el curso de los viernes, los nuevos inscriptos de ese curso son milena, rodrigo y matilda
+       // - Ahora camilo ya no puede ser inscripto (se completo el cupo)
+       // - Si intentás  inscribir a camilo estamos en un problema, porque no se puede
+   }
 
-//   test "1.d. escuela de niños" {
-//       // milena no se puede inscribir en la colonia (ya está inscripta)
-//       // matilda sí se puede inscribir en la colonia 
-//       // camilo no se puede inscribi en la colonia (es muy grande)
-//       // elias no se puede inscribir en la colonia (no sabe ningún estilo y debi no es guardavida)
-//       // Se intenta inscribir a camilo a la colonia, pero estamos en un problema porque no se puede!
-//       // Se intenta inscribir a elias a la colonia, pero estamos en un problema porque no se puede!
-//       // Se inscribe a matilda a la colonia sin problema
-//       // Los inscriptos a la colonia ahora son milena, rodrigo y matilda
+   test "1.d. escuela de niños" {
+      assert.notThat(colonia.puedeInscribirAEstudiante(milena))
+      assert.that(colonia.puedeInscribirAEstudiante(matilda))
+      assert.notThat(colonia.puedeInscribirAEstudiante(camilo))
+      assert.notThat(colonia.puedeInscribirAEstudiante(elias))
+      assert.throwsException({colonia.inscribirAEstudiante(camilo)})
+      assert.throwsException({colonia.inscribirAEstudiante(elias)})
+      colonia.inscribirAEstudiante(matilda)
+      assert.equals(#{milena,rodrigo,matilda}, colonia.estudiantesInscriptos())
+       // milena no se puede inscribir en la colonia (ya está inscripta)
+       // matilda sí se puede inscribir en la colonia 
+       // camilo no se puede inscribi en la colonia (es muy grande)
+       // elias no se puede inscribir en la colonia (no sabe ningún estilo y debi no es guardavida)
+       // Se intenta inscribir a camilo a la colonia, pero estamos en un problema porque no se puede!
+       // Se intenta inscribir a elias a la colonia, pero estamos en un problema porque no se puede!
+       // Se inscribe a matilda a la colonia sin problema
+       // Los inscriptos a la colonia ahora son milena, rodrigo y matilda
 
-//  }
+  }
 
-  // test "1.e terapeutico (docente externo)" {
-  //     // milena no se puede inscribir a la rehabilitacion (ya está inscripta)
-  //     // juana no se puede inscribir a la rehabilitación (no domina ningún estilo relajante)
-  //     // matilda sí se puede inscribir a la rehabilitación 
-  //     // rodrigo sí se puede inscribir a la rehabilitación 
-  //     // inscribir a matilda a la rehabilitación (se puede sin problemas)
-  //     // Ahora si se intenta inscribir a rodrigo estaríamos en un problema porque se llegó al límite de menores de 13 que acepta mara
-  //     // Los inscriptos a la rehabilitación son milena, camilo y matilda
-  // }
+   test "1.e terapeutico (docente externo)" {
+      assert.notThat(rehabilitacion.puedeInscribirAEstudiante(milena))
+      assert.notThat(rehabilitacion.puedeInscribirAEstudiante(juana))
+      assert.that(rehabilitacion.puedeInscribirAEstudiante(matilda))
+      assert.that(rehabilitacion.puedeInscribirAEstudiante(rodrigo))
+      rehabilitacion.inscribirAEstudiante(matilda)
+      assert.throwsException({rehabilitacion.inscribirAEstudiante(rodrigo)})
+      assert.equals(#{milena,camilo,matilda}, rehabilitacion.estudiantesInscriptos())
+       // milena no se puede inscribir a la rehabilitacion (ya está inscripta)
+       // juana no se puede inscribir a la rehabilitación (no domina ningún estilo relajante)
+       // matilda sí se puede inscribir a la rehabilitación 
+       // rodrigo sí se puede inscribir a la rehabilitación 
+       // inscribir a matilda a la rehabilitación (se puede sin problemas)
+       // Ahora si se intenta inscribir a rodrigo estaríamos en un problema porque se llegó al límite de menores de 13 que acepta mara
+       // Los inscriptos a la rehabilitación son milena, camilo y matilda
+   }
 
   //punto 2
 
